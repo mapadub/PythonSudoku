@@ -1,0 +1,2 @@
+GRID_SIZE = 9
+BOX_SIZE = 3
