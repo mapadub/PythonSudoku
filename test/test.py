@@ -4,11 +4,6 @@ from Solver import Solver
 
 
 @pytest.fixture
-def solver():
-    return Solver()
-
-
-@pytest.fixture
 def solvable_sudoku():
     grid = np.array([[0, 2, 0, 6, 0, 0, 0, 0, 5],
                      [5, 4, 9, 0, 3, 0, 8, 1, 0],
@@ -24,7 +19,7 @@ def solvable_sudoku():
 
 @pytest.fixture
 def not_solvable_sudoku():
-    grid = np.array([[0, 2, 0, 6, 0, 0, 0, 0, 5],
+    grid = np.array([[0, 1, 0, 6, 0, 0, 0, 0, 5],
                      [5, 4, 9, 0, 3, 0, 8, 1, 0],
                      [0, 0, 0, 0, 8, 5, 7, 0, 0],
                      [0, 8, 0, 0, 4, 7, 9, 0, 0],
@@ -36,16 +31,36 @@ def not_solvable_sudoku():
     return grid
 
 
-def test_grid_is_none(solver):
+@pytest.fixture
+def wrong_shaped_grid():
+    return np.zeros((4, 5))
+
+
+@pytest.fixture
+def full_grid():
+    return np.full((9, 9), 1, dtype=int)
+
+
+def test_grid_is_none():
     with pytest.raises(TypeError):
-        solver.solveble()
+        Solver(None)
 
 
-def test_solvable(solver, solvable_sudoku):
-    solver.set_grid(solvable_sudoku)
-    assert not solver.solveble()
+def test_grid_is_wrong_shape(wrong_shaped_grid):
+    with pytest.raises(TypeError):
+        Solver(wrong_shaped_grid)
 
 
-def test_not_solvable(solver, not_solvable_sudoku):
-    solver.set_grid(not_solvable_sudoku)
-    assert not solver.solveble()
+def test_grid_is_already_filled(full_grid):
+    with pytest.raises(ValueError):
+        Solver(full_grid)
+
+
+def test_solvable(solvable_sudoku):
+    solver = Solver(solvable_sudoku)
+    assert solver.solvable()
+
+
+def test_not_solvable(not_solvable_sudoku):
+    solver = Solver(not_solvable_sudoku)
+    assert not solver.solvable()
