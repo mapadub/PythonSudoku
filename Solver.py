@@ -1,19 +1,24 @@
+from numpy import ndarray
 from const import GRID_SIZE, BOX_SIZE
 
 
 class Solver:
 
     def __init__(self, grid):
+        if not isinstance(grid, ndarray) or grid.shape != (9, 9):
+            raise TypeError("Grid parameter must be an instance of numpy.ndarray and have a 9x9 shape")
+        elif 0 not in grid:
+            raise ValueError("Grid is already full")
         self.grid = grid
 
-    def solveble(self):
+    def solvable(self):
         for row in range(GRID_SIZE):
             for column in range(GRID_SIZE):
                 if self.grid[row][column] == 0:
                     available_numbers = self._get_available_numbers_for_position(row, column)
                     for n in available_numbers:
                         self.grid[row][column] = n
-                        if self.solveble():
+                        if self.solvable():
                             return True  # recursive, checks if the Sudoku will be solvable after
                         self.grid[row][column] = 0
                     return False

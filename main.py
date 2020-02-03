@@ -14,7 +14,7 @@ def main():
                      [0, 0, 3, 0, 2, 4, 0, 0, 0]])
 
     solver = Solver(grid)
-    if solver.solveble():
+    if solver.solvable():
         return
     print("The grid is not solvable :(")
 
