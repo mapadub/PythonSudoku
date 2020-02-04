@@ -13,8 +13,8 @@ def main():
                      [9, 0, 0, 5, 0, 0, 0, 8, 0],
                      [0, 0, 3, 0, 2, 4, 0, 0, 0]])
 
-    solver = Solver(grid)
-    if solver.solvable():
+    solver = Solver()
+    if solver.is_solvable(grid):
         return
     print("The grid is not solvable :(")
 
