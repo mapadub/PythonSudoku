@@ -1,6 +1,11 @@
 import pytest
 import numpy as np
-import Solver
+from Solver import Solver
+
+
+@pytest.fixture
+def solver():
+    return Solver()
 
 
 @pytest.fixture
@@ -41,24 +46,24 @@ def full_grid():
     return np.full((9, 9), 1, dtype=int)
 
 
-def test_grid_is_none():
+def test_grid_is_none(solver):
     with pytest.raises(TypeError):
-        Solver.solvable(None)
+        solver.is_solvable(None)
 
 
-def test_grid_is_wrong_shape(wrong_shaped_grid):
+def test_grid_is_wrong_shape(solver, wrong_shaped_grid):
     with pytest.raises(TypeError):
-        Solver.solvable(wrong_shaped_grid)
+        solver.is_solvable(wrong_shaped_grid)
 
 
-def test_grid_is_already_filled(full_grid):
+def test_grid_is_already_filled(solver, full_grid):
     with pytest.raises(ValueError):
-        Solver.solvable(full_grid)
+        solver.is_solvable(full_grid)
 
 
-def test_solvable(solvable_sudoku):
-    assert Solver.solvable(solvable_sudoku)
+def test_solvable(solver, solvable_sudoku):
+    assert solver.is_solvable(solvable_sudoku)
 
 
-def test_not_solvable(not_solvable_sudoku):
-    assert not Solver.solvable(not_solvable_sudoku)
+def test_not_solvable(solver, not_solvable_sudoku):
+    assert not solver.is_solvable(not_solvable_sudoku)

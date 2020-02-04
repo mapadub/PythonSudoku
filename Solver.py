@@ -4,27 +4,33 @@ from const import GRID_SIZE, BOX_SIZE
 
 class Solver:
 
-    def __init__(self, grid):
-        if not isinstance(grid, ndarray) or grid.shape != (9, 9):
-            raise TypeError("Grid parameter must be an instance of numpy.ndarray and have a 9x9 shape")
-        elif 0 not in grid:
-            raise ValueError("Grid is already full")
-        self.grid = grid
+    grid = None
+    checked = False
 
-    def solvable(self):
+    def is_solvable(self, grid):
+        self._check_grid(grid)
+        self.grid = grid
         for row in range(GRID_SIZE):
             for column in range(GRID_SIZE):
                 if self.grid[row][column] == 0:
                     available_numbers = self._get_available_numbers_for_position(row, column)
                     for n in available_numbers:
                         self.grid[row][column] = n
-                        if self.solvable():
+                        if self.is_solvable(self.grid):
                             return True  # recursive, checks if the Sudoku will be solvable after
                         self.grid[row][column] = 0
                     return False
         print("The grid is solvable! The solution is: \n")
         print(self.grid)
         return True
+
+    def _check_grid(self, grid):
+        if not self.checked:
+            if not isinstance(grid, ndarray) or grid.shape != (9, 9):
+                raise TypeError("Grid parameter must be an instance of numpy.ndarray and have a 9x9 shape")
+            elif 0 not in grid:
+                raise ValueError("Grid is already full")
+            self.checked = True
 
     def _get_available_numbers_for_position(self, row, column):
         available_numbers = set(range(1, 10))
@@ -59,54 +65,3 @@ class Solver:
     @staticmethod
     def _get_end_index(position):
         return position + BOX_SIZE
-
-    def solve_grid(self, grid):
-        for i in range(0, 81):
-            row = i // 9
-            col = i % 9
-            if grid[row][col] == 0:
-                for value in range(1, 10):
-                    # Check that this value has not already be used on this row
-                    if not (value in grid[row]):
-                        # Check that this value has not already be used on this column
-                        if not value in (
-                        grid[0][col], grid[1][col], grid[2][col], grid[3][col], grid[4][col], grid[5][col],
-                        grid[6][col], grid[7][col], grid[8][col]):
-                            # Identify which of the 9 squares we are working on
-                            square = []
-                            if row < 3:
-                                if col < 3:
-                                    square = [grid[i][0:3] for i in range(0, 3)]
-                                elif col < 6:
-                                    square = [grid[i][3:6] for i in range(0, 3)]
-                                else:
-                                    square = [grid[i][6:9] for i in range(0, 3)]
-                            elif row < 6:
-                                if col < 3:
-                                    square = [grid[i][0:3] for i in range(3, 6)]
-                                elif col < 6:
-                                    square = [grid[i][3:6] for i in range(3, 6)]
-                                else:
-                                    square = [grid[i][6:9] for i in range(3, 6)]
-                            else:
-                                if col < 3:
-                                    square = [grid[i][0:3] for i in range(6, 9)]
-                                elif col < 6:
-                                    square = [grid[i][3:6] for i in range(6, 9)]
-                                else:
-                                    square = [grid[i][6:9] for i in range(6, 9)]
-                            # Check that this value has not already be used on this 3x3 square
-                            if not value in (square[0] + square[1] + square[2]):
-                                grid[row][col] = value
-                                myPen.clear()
-                                drawGrid(grid)
-                                myPen.getscreen().update()
-                                if checkGrid(grid):
-                                    print("Grid Complete and Checked")
-                                    return True
-                                else:
-                                    if solveGrid(grid):
-                                        return True
-                break
-        print("Backtrack")
-        grid[row][col] = 0
