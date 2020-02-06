@@ -1,2 +1,3 @@
 GRID_SIZE = 9
 BOX_SIZE = 3
+LEVELS = {"EASY": 52}
