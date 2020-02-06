@@ -15,8 +15,6 @@ class GridWrapper:
                 type(grid)))
         elif grid.shape != (GRID_SIZE, GRID_SIZE):
             raise ValueError("Grid must be of shape 9x9")
-        elif 0 not in grid:
-            raise ValueError("Grid is already full")
 
     def get_available_numbers_for_position(self, row, column):
         available_numbers = set(range(1, 10))
