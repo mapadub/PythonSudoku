@@ -5,13 +5,15 @@ import copy
 
 class Solver:
 
+    grid_checked = False
+
     def is_solvable(self, wrapper):
         """
         Check whether or not the grid is solvable
         :param wrapper:
         :return: True if grid is solvable
         """
-        self._check_is_grid_wrapper(wrapper)
+        self._check_grid(wrapper)
         copied_wrapper = copy.deepcopy(wrapper)
         for row in range(GRID_SIZE):
             for column in range(GRID_SIZE):
@@ -27,10 +29,13 @@ class Solver:
         print(copied_wrapper.grid)
         return True
 
-    @staticmethod
-    def _check_is_grid_wrapper(obj):
-        if not isinstance(obj, GridWrapper):
-            raise TypeError("Wrapper parameter must be an instance of GridWrapper")
+    def _check_grid(self, obj):
+        if not self.grid_checked:
+            if not isinstance(obj, GridWrapper):
+                raise TypeError("Wrapper parameter must be an instance of GridWrapper")
+            elif 0 not in obj.grid:
+                raise ValueError("Grid is already full")
+        self.grid_checked = True
 
 
 

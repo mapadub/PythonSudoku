@@ -1,12 +1,18 @@
 import pytest
 import numpy as np
-from Solver import Solver
+from solver import Solver
 from grid_wrapper import GridWrapper
 
 
 @pytest.fixture
 def solver():
     return Solver()
+
+
+@pytest.fixture
+def full_grid():
+    array = np.full((9, 9), 1, dtype=int)
+    return GridWrapper(array)
 
 
 @pytest.fixture
@@ -43,3 +49,8 @@ def test_solvable(solver, solvable_sudoku):
 
 def test_not_solvable(solver, not_solvable_sudoku):
     assert not solver.is_solvable(not_solvable_sudoku)
+
+
+def test_grid_is_already_filled(solver, full_grid):
+    with pytest.raises(ValueError):
+        solver.is_solvable(full_grid)
